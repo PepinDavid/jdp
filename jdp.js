@@ -1,3 +1,4 @@
+//for practice to create JS librairy
 window.jdp = (function(){
     function Jdp (elements){
         for(var i = 0; i < elements.length; i++){
