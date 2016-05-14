@@ -86,11 +86,11 @@ window.jdp = (function () {
         return children;
     };
     Jdp.prototype.parent = function () {
-        var parent = {};
+        var parent
         this.forEach(function (el) {
-           parent = el.parentElement;
+            parent = el.parentElement;
         });
-        return parent;
+        return jdp.element(parent);
     };
     Jdp.prototype.attr = function (name, value) {
         if (typeof name !== 'string') {
@@ -132,23 +132,23 @@ window.jdp = (function () {
             return el.parentNode.removeChild(el);
         })
     };
-    Jdp.prototype.on = (function(){
-        if(document.addEventListener){
-            return function(evt, callback){
-                return this.forEach(function(el){
+    Jdp.prototype.on = (function () {
+        if (document.addEventListener) {
+            return function (evt, callback) {
+                return this.forEach(function (el) {
                     el.addEventListener(evt, callback, false);
                 })
             }
-        } else if( document.attachEvent){
-            return function(evt, callback){
-                return this.forEach(function(el){
-                    el.attachEvent("on"+evt, callback)
+        } else if (document.attachEvent) {
+            return function (evt, callback) {
+                return this.forEach(function (el) {
+                    el.attachEvent("on" + evt, callback)
                 })
             }
-        }else{
-            return function(evt, callback){
-                return this.forEach(function(el){
-                    el["on"+evt] = callback;
+        } else {
+            return function (evt, callback) {
+                return this.forEach(function (el) {
+                    el["on" + evt] = callback;
                 })
             }
         }
@@ -183,8 +183,27 @@ window.jdp = (function () {
                 }
             }
             return el;
+        },
+        isArray: function (obj) {
+            if (obj.length > 0) {
+                return true;
+            }
+            return false;
+        },
+        emptyObject: function (obj) {
+            var name;
+            for (name in obj) {
+                return false;
+            }
+            return true;
+        },
+        lengthObject: function(obj){
+            var count = 0, name= '';
+            for(name in obj){
+                count++;
+            }
+            return count;
         }
-
     }
     return jpd;
 }());
