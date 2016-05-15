@@ -184,8 +184,52 @@ window.jdp = (function () {
             }
             return el;
         },
+        each: function(obj, callback, args){
+            var val, i= 0, length = obj.length, isArray = this.isArray(obj);
+            if(args){
+                if(isArray){
+                    for( ; i < length; i++){
+                        val = callback.call(obj[i], args);
+                        if(val === false){
+                            break;
+                        }
+                    }                    
+                }else{
+                    for( i in obj){
+                        val = callback.call(obj[i], args);
+                        if(val === false){
+                            break;
+                        }
+                    }
+                }
+            }else{
+                if(isArray){
+                    for( ; i < length; i++){
+                        val = callback.call(obj[i], i, obj[i]);
+                        if(val === false){
+                            break;
+                        }
+                    }
+                    
+                }else{
+                    for( i in obj){
+                        val = callback.call(obj[i], i, obj[i]);
+                        if(val === false){
+                            break;
+                        }
+                    }
+                }
+            }
+            return obj;
+        },
         isArray: function (obj) {
             if (obj.length > 0) {
+                return true;
+            }
+            return false;
+        },
+        isFunction: function(fn){
+            if(typeof fn === 'function'){
                 return true;
             }
             return false;
@@ -197,13 +241,45 @@ window.jdp = (function () {
             }
             return true;
         },
-        lengthObject: function(obj){
-            var count = 0, name= '';
-            for(name in obj){
+        lengthObject: function (obj) {
+            var count = 0,
+                name = '';
+            for (name in obj) {
                 count++;
             }
             return count;
+        },
+        now: function(){
+            return (new Date()).getTime();
         }
-    }
+    };
     return jpd;
 }());
+(function () {
+    if (!Array.prototype.indexOf) {
+        Array.prototype.indexOf = function (searchElement, fromIndex) {
+            var k;
+            if (this === null) {
+                throw new TypeError('"This" is null or is not defined');
+            }
+            var o = Object(this);
+            var len = o.length >>> 0;
+            if (len === 0) {
+                return -1
+            }
+            var n = +fromIndex || 0;
+            if(n >= len){
+                return -1
+            }
+            k = Math.max(n >= 0 ? n : len - Math.abs(n), 0);
+            while( k < len){
+                if(k in o[k] === searchElement){
+                    return k
+                }
+                k++;
+            }
+            return -1;
+        };
+    }
+
+})()
