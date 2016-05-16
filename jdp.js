@@ -249,6 +249,43 @@ window.jdp = (function () {
             }
             return count;
         },
+        ready: function(callback){
+            var doc = this.element(document);
+            if(document.addEventListener){
+                doc.on('DOMContentLoaded',callback(event), false);
+            }else{
+                doc.on('onreadystatechange', callback(event), false);
+            }
+        },
+        ajax: function (o) { // TODO finish this
+            var xhr, url, async, method = ['GET', 'POST'];
+            xhr = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject("Microsoft.XMLHTTP");
+            async = o.async === undefined ? true : o.async;
+            console.log(async)
+            if(typeof o !== 'object' || this.emptyObject(o)){
+                throw new TypeError('Arguments must be a object');
+            }
+            method = method.indexOf(o.method) > -1 ? o.method : null;
+            if(method === null){
+                throw new TypeError('This method is not accepted or not existed : '+o.method)
+            }
+            if(method === 'GET'){
+                xhr.open(method, o.url, async);
+                xhr.send();
+            }else{
+                xhr.open(method, o.url, async);
+                xhr.setRequestHeader("Content-type", "application/x-www-form-urldencoded");
+                xhr.send(o.data);
+            }
+            xhr.onreadystatechange = function(){
+                if(xhr.readyState == 4 && xhr.status == 200){
+                    o.success(xhr.response, xhr.status)
+                }else if(xhr.readyState == 4 && xhr.status == 404){
+                    var error = 'page not exist';
+                    o.error(error, xhr.status);
+                }
+            }
+        },
         now: function(){
             return (new Date()).getTime();
         }
@@ -282,4 +319,4 @@ window.jdp = (function () {
         };
     }
 
-})()
+})();
