@@ -274,7 +274,6 @@ window.jdp = (function () {
                 xhr.open(method, o.url, async);
                 xhr.send();
             }else{
-                console.log(contentType+', '+o.data)
                 xhr.setRequestHeader("Content-type", contentType);
                 xhr.send(o.data);
             }
