@@ -258,8 +258,9 @@ window.jdp = (function () {
             }
         },
         ajax: function (o) { // TODO finish this
-            var xhr, url, async, method = ['GET', 'POST'];
+            var xhr, url, contentType, async, method = ['GET', 'POST'];
             xhr = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject("Microsoft.XMLHTTP");
+            contentType = o.contentType === undefined ? "application/x-www-form-urlencoded" : o.contentType;
             async = o.async === undefined ? true : o.async;
             console.log(async)
             if(typeof o !== 'object' || this.emptyObject(o)){
@@ -273,8 +274,8 @@ window.jdp = (function () {
                 xhr.open(method, o.url, async);
                 xhr.send();
             }else{
-                xhr.open(method, o.url, async);
-                xhr.setRequestHeader("Content-type", "application/x-www-form-urldencoded");
+                console.log(contentType+', '+o.data)
+                xhr.setRequestHeader("Content-type", contentType);
                 xhr.send(o.data);
             }
             xhr.onreadystatechange = function(){
